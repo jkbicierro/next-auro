@@ -1,5 +1,11 @@
 //import Image from "next/image";
 
 export default function SignupScreen() {
-    return <></>;
+    return (
+        <>
+            <main>
+                <h1>Sign up</h1>
+            </main>
+        </>
+    );
 }
