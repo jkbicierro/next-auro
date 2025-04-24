@@ -15,12 +15,6 @@ export default function Home() {
                         <li>
                             <Link href={"/auth/login"}>auth/login</Link>
                         </li>
-                        <li>
-                            <Link href={"/auth/signup"}>auth/signup</Link>
-                        </li>
-                        <li>
-                            <Link href={"/admin/tickets"}>admin/tickets</Link>
-                        </li>
                     </ul>
                 </div>
             </main>

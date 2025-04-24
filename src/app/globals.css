@@ -126,15 +126,15 @@ h1 {
 }
 
 h2 {
-    @apply text-2xl;
+    @apply text-2xl font-bold;
+}
+
+h3 {
+    @apply text-xl font-bold;
 }
 
 h4 {
-    @apply text-xl;
-}
-
-h5 {
-    @apply text-lg;
+    @apply text-lg font-bold;
 }
 
 p {

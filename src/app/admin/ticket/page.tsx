@@ -41,6 +41,28 @@ export default function TicketScreen() {
     const [tickets, setTickets] = useState<Approval_Ticket[]>([]);
 
     useEffect(() => {
+        async function GetSession() {
+            try {
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/session`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                    }
+                );
+                if (!res.ok) {
+                    router.push("/auth/login");
+                }
+            } catch (err) {
+                console.error("[GetSession] Error:", err);
+                toast.error("[GetSession] Failed to fetch. Please try again.");
+            }
+        }
+
+        GetSession();
+    }, []);
+
+    useEffect(() => {
         async function GetTicketAll() {
             try {
                 const res = await fetch(
@@ -48,7 +70,7 @@ export default function TicketScreen() {
                 );
 
                 if (!res.ok) {
-                    throw new Error("Failed to fetch announcements");
+                    throw new Error("Failed to fetch data");
                 }
 
                 const { tickets } = await res.json();
@@ -95,17 +117,7 @@ export default function TicketScreen() {
             </nav>
 
             <main className="px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px]">
-                <div className="h-[300px] flex flex-col items-center justify-center gap-5">
-                    <h1>Power Your Process with Auro</h1>
-                    <p>Where Access Meets Accountability</p>
-                    <div className="flex gap-2 items-center">
-                        <Input
-                            placeholder="Got a ticket? Paste it here"
-                            className="w-[300px]"
-                        />
-                        <Button>Check Status</Button>
-                    </div>
-                </div>
+                <HeroTicket />
 
                 <div>
                     <Table>
@@ -286,5 +298,34 @@ function TicketAction({ ticket_id }: TicketActionProps) {
                 </DialogContent>
             </Dialog>
         </ul>
+    );
+}
+
+function HeroTicket() {
+    const router = useRouter();
+    const [ticketId, setTicketId] = useState("");
+
+    async function CheckTicket() {
+        if (!ticketId || isNaN(Number(ticketId))) {
+            toast.warning("The ticket ID must be a valid number");
+            return;
+        }
+        router.push(`/ticket/${ticketId}`);
+    }
+
+    return (
+        <div className="h-[300px] flex flex-col items-center justify-center gap-5 text-center">
+            <h1>Power Your Process with Auro</h1>
+            <p>Where Access Meets Accountability</p>
+            <div className="flex gap-2 items-center">
+                <Input
+                    placeholder="Got a ticket? Paste it here"
+                    className="w-[300px]"
+                    value={ticketId}
+                    onChange={(e) => setTicketId(e.target.value)}
+                />
+                <Button onClick={CheckTicket}>View Ticket</Button>
+            </div>
+        </div>
     );
 }

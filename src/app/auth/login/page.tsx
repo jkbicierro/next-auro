@@ -54,10 +54,9 @@ export default function LoginScreen() {
             <main className="h-dvh flex items-center justify-center">
                 <div className="w-[350px]">
                     <div>
-                        <h1>Sign in to Auro</h1>
+                        <h3>Sign in to Auro</h3>
                         <p className="mt-2">We are happy to see you again!</p>
                     </div>
-
                     <div className="mt-5 flex flex-col gap-4">
                         <Button variant={"outline"} className="rounded-full">
                             <FcGoogle /> Continue with Google
@@ -67,9 +66,7 @@ export default function LoginScreen() {
                             Continue with Github
                         </Button>
                     </div>
-
                     <hr className="mt-5" />
-
                     <div className="mt-5">
                         <LoginForm />
                     </div>
