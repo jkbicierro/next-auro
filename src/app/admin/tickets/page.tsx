@@ -1,41 +1,37 @@
 "use client";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { Approval_Ticket } from "@/models/ticket.model";
+import { CircleCheck, CircleX, Ellipsis } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
-/*
-export const ticket_table = pgTable("tickets", {
-    id: serial("id").primaryKey(),
-    referenceId: text("reference_id").notNull(),
-    title: text("title").notNull(),
-    type: text("type").notNull(),
-    status: text("status").notNull(),
-    department: text("department").notNull(),
-    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
-});
-
-*/
-
-interface Approval_Ticket {
-    id: number;
-    referenceId: string;
-    title: string;
-    type: string;
-    status: string;
-    department: string;
-    createdAt: string;
-    updatedAt: string;
-}
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { format } from "date-fns";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function TicketScreen() {
     const [tickets, setTickets] = useState<Approval_Ticket[]>([]);
@@ -61,24 +57,22 @@ export default function TicketScreen() {
         GetTicketAll();
     }, []);
 
-    console.log(tickets);
-
     return (
         <>
             <main className="mt-20 ml-20">
                 <h1>Tickets</h1>
 
-                <div className="w-[800px]">
+                <div className="w-[1000px]">
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead>ticket_id</TableHead>
-                                <TableHead>reference_id</TableHead>
-                                <TableHead>title</TableHead>
-                                <TableHead>type</TableHead>
-                                <TableHead>status</TableHead>
-                                <TableHead>department</TableHead>
-                                <TableHead>createdAt</TableHead>
+                                <TableHead>ID</TableHead>
+                                <TableHead>Reference ID</TableHead>
+                                <TableHead>Title</TableHead>
+                                <TableHead>Type</TableHead>
+                                <TableHead>Status</TableHead>
+                                <TableHead>Department</TableHead>
+                                <TableHead>Created At</TableHead>
                             </TableRow>
                         </TableHeader>
 
@@ -87,16 +81,55 @@ export default function TicketScreen() {
                                 <TableBody key={i.id}>
                                     <TableRow>
                                         <TableCell>{i.id}</TableCell>
-                                        <TableCell>{i.referenceId}</TableCell>
-                                        <TableCell>{i.title}</TableCell>
+                                        <TableCell>{i.reference_id}</TableCell>
+                                        <TableCell className="flex items-center gap-3">
+                                            {i.title}
+                                        </TableCell>
                                         <TableCell>{i.type}</TableCell>
                                         <TableCell>
-                                            <Badge className="bg-yellow-200 text-yellow-600">
-                                                {i.status}
-                                            </Badge>
+                                            {i.status === "Approved" && (
+                                                <Badge className="bg-green-200 text-green-600">
+                                                    {i.status}
+                                                </Badge>
+                                            )}
+                                            {i.status === "For Approval" && (
+                                                <Badge className="bg-yellow-200 text-yellow-600">
+                                                    {i.status}
+                                                </Badge>
+                                            )}
+                                            {i.status === "Declined" && (
+                                                <Badge className="bg-red-200 text-red-600">
+                                                    {i.status}
+                                                </Badge>
+                                            )}
                                         </TableCell>
                                         <TableCell>{i.department}</TableCell>
-                                        <TableCell>{i.createdAt}</TableCell>
+                                        <TableCell>
+                                            <div className="flex gap-3 items-center justify-between w-[200px]">
+                                                {format(
+                                                    new Date(i.createdAt),
+                                                    "MMMM d, yyyy h:mm a"
+                                                )}
+
+                                                <Popover>
+                                                    <PopoverTrigger asChild>
+                                                        <Button
+                                                            size="icon"
+                                                            variant={"ghost"}
+                                                        >
+                                                            <Ellipsis
+                                                                size={18}
+                                                            />
+                                                        </Button>
+                                                    </PopoverTrigger>
+                                                    <PopoverContent className="w-[250px]">
+                                                        <TicketAction
+                                                            ticket_id={i.id}
+                                                        />
+                                                    </PopoverContent>
+                                                </Popover>
+                                            </div>
+                                        </TableCell>
                                     </TableRow>
                                 </TableBody>
                             ))}
@@ -104,5 +137,107 @@ export default function TicketScreen() {
                 </div>
             </main>
         </>
+    );
+}
+
+type TicketActionProps = {
+    ticket_id: number;
+};
+
+function TicketAction({ ticket_id }: TicketActionProps) {
+    async function ApproveTicket() {
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/ticket/approve`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ ticket_id: ticket_id }),
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Failed to fetch announcements");
+            }
+            const { message } = await res.json();
+
+            // Success + Add Toast Alert
+            toast.success(message);
+        } catch (err) {
+            console.error("[fetch] ApproveTicket:", err);
+            toast.error("Failed to fetch ApproveTicket. Please try again.");
+        }
+    }
+
+    async function DeclineTicket() {
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/ticket/decline`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ ticket_id: ticket_id }),
+                }
+            );
+
+            if (!res.ok) {
+                throw new Error("Failed to fetch announcements");
+            }
+
+            const { message } = await res.json();
+            toast.success(message);
+        } catch (err) {
+            console.error("[fetch] ApproveTicket:", err);
+            toast.error("Failed to fetch ApproveTicket. Please try again.");
+        }
+    }
+
+    return (
+        <ul className="flex flex-col gap-1">
+            <li
+                onClick={ApproveTicket}
+                className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-100 rounded cursor-pointer"
+            >
+                <span className="text-sm">Approve Ticket</span>
+                <CircleCheck size={16} />
+            </li>
+            <Dialog>
+                <DialogTrigger className="w-full">
+                    <li className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-100 rounded cursor-pointer">
+                        <span className="text-sm">Decline Ticket</span>
+                        <CircleX size={16} />
+                    </li>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            Do you want to decline this ticket?
+                        </DialogTitle>
+                        <DialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your account and remove your data from our
+                            servers.
+                        </DialogDescription>
+
+                        <div>
+                            Remarks (Optional)
+                            <Textarea placeholder="Type your message here." />
+                        </div>
+
+                        <DialogFooter>
+                            <DialogClose asChild>
+                                <Button onClick={DeclineTicket}>
+                                    Yes, decline the ticket
+                                </Button>
+                            </DialogClose>
+                        </DialogFooter>
+                    </DialogHeader>
+                </DialogContent>
+            </Dialog>
+        </ul>
     );
 }
