@@ -32,8 +32,12 @@ import {
 } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import FooterSection from "@/components/block/footer";
 
 export default function TicketScreen() {
+    const router = useRouter();
     const [tickets, setTickets] = useState<Approval_Ticket[]>([]);
 
     useEffect(() => {
@@ -50,19 +54,60 @@ export default function TicketScreen() {
                 const { tickets } = await res.json();
                 setTickets(tickets);
             } catch (err) {
-                console.error("[fetch] GetTicketAll:", err);
-                toast.error("Failed to fetch GetTicketAll. Please try again.");
+                console.error("[GetTicketAll] Error:", err);
+                toast.error(
+                    "[GetTicketAll] Failed to fetch. Please try again."
+                );
             }
         }
         GetTicketAll();
     }, []);
 
+    async function Logout() {
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/logout`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                }
+            );
+            const { message } = await res.json();
+
+            if (res.ok) {
+                router.push("/auth/login");
+                toast.success(message);
+            }
+        } catch (err) {
+            console.error("[Logout] Error:", err);
+            toast.error("[Logout] Failed to fetch. Please try again.");
+        }
+    }
+
     return (
         <>
-            <main className="mt-20 ml-20">
-                <h1>Tickets</h1>
+            <nav className="px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px] h-[60px] w-full flex items-center justify-between border-b">
+                <div>Auro</div>
 
-                <div className="w-[1000px]">
+                <div>
+                    <Button onClick={Logout}>Sign out</Button>
+                </div>
+            </nav>
+
+            <main className="px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px]">
+                <div className="h-[300px] flex flex-col items-center justify-center gap-5">
+                    <h1>Power Your Process with Auro</h1>
+                    <p>Where Access Meets Accountability</p>
+                    <div className="flex gap-2 items-center">
+                        <Input
+                            placeholder="Got a ticket? Paste it here"
+                            className="w-[300px]"
+                        />
+                        <Button>Check Status</Button>
+                    </div>
+                </div>
+
+                <div>
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -72,7 +117,7 @@ export default function TicketScreen() {
                                 <TableHead>Type</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Department</TableHead>
-                                <TableHead>Created At</TableHead>
+                                <TableHead>Created at</TableHead>
                             </TableRow>
                         </TableHeader>
 
@@ -136,6 +181,8 @@ export default function TicketScreen() {
                     </Table>
                 </div>
             </main>
+
+            <FooterSection />
         </>
     );
 }
@@ -200,14 +247,14 @@ function TicketAction({ ticket_id }: TicketActionProps) {
         <ul className="flex flex-col gap-1">
             <li
                 onClick={ApproveTicket}
-                className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-100 rounded cursor-pointer"
+                className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded cursor-pointer"
             >
                 <span className="text-sm">Approve Ticket</span>
                 <CircleCheck size={16} />
             </li>
             <Dialog>
                 <DialogTrigger className="w-full">
-                    <li className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-100 rounded cursor-pointer">
+                    <li className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded cursor-pointer">
                         <span className="text-sm">Decline Ticket</span>
                         <CircleX size={16} />
                     </li>

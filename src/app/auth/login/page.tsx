@@ -1,7 +1,5 @@
 "use client";
 
-//import Image from "next/image";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
@@ -23,33 +21,63 @@ import { FcGoogle } from "react-icons/fc";
 import { GrGithub } from "react-icons/gr";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import FooterSection from "@/components/block/footer";
 
 export default function LoginScreen() {
+    const router = useRouter();
+
+    useEffect(() => {
+        async function GetSession() {
+            try {
+                const res = await fetch(
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/session`,
+                    {
+                        method: "GET",
+                        credentials: "include",
+                    }
+                );
+                if (res.ok) {
+                    router.push("/admin/ticket");
+                }
+            } catch (err) {
+                console.error("[GetSession] Error:", err);
+                toast.error("[GetSession] Failed to fetch. Please try again.");
+            }
+        }
+
+        GetSession();
+    }, []);
+
     return (
-        <main className="h-dvh flex items-center justify-center">
-            <div className="w-[350px]">
-                <div>
-                    <h1>Sign in to Auro</h1>
-                    <p className="mt-2">We are happy to see you again!</p>
-                </div>
+        <>
+            <main className="h-dvh flex items-center justify-center">
+                <div className="w-[350px]">
+                    <div>
+                        <h1>Sign in to Auro</h1>
+                        <p className="mt-2">We are happy to see you again!</p>
+                    </div>
 
-                <div className="mt-5 flex flex-col gap-4">
-                    <Button variant={"outline"} className="rounded-full">
-                        <FcGoogle /> Continue with Google
-                    </Button>
-                    <Button variant={"outline"} className="rounded-full">
-                        <GrGithub />
-                        Continue with Github
-                    </Button>
-                </div>
+                    <div className="mt-5 flex flex-col gap-4">
+                        <Button variant={"outline"} className="rounded-full">
+                            <FcGoogle /> Continue with Google
+                        </Button>
+                        <Button variant={"outline"} className="rounded-full">
+                            <GrGithub />
+                            Continue with Github
+                        </Button>
+                    </div>
 
-                <hr className="mt-5" />
+                    <hr className="mt-5" />
 
-                <div className="mt-5">
-                    <LoginForm />
+                    <div className="mt-5">
+                        <LoginForm />
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+
+            <FooterSection />
+        </>
     );
 }
 
@@ -85,7 +113,7 @@ function LoginForm() {
 
             if (res.ok) {
                 toast.success(data.message);
-                router.push("/admin"); // Redirect to the dashboard or any other page
+                router.push("/admin/ticket"); // Redirect to the dashboard or any other page
             } else {
                 toast.error(data.message);
             }
