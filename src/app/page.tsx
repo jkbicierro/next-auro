@@ -7,12 +7,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Github } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 //import Image from "next/image";
 
 export default function Home() {
-    //const router = useRouter();
+    const router = useRouter();
+    const [ticketId, setTicketId] = useState("");
 
+    async function CheckTicket() {
+        if (!ticketId || isNaN(Number(ticketId))) {
+            toast.warning("The ticket ID must be a valid number");
+            return;
+        }
+        router.push(`/ticket/${ticketId}`);
+    }
     return (
         <>
             <nav className="z-50 fixed bg-background px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px] h-[60px] w-full flex items-center justify-between border-b">
@@ -37,6 +48,7 @@ export default function Home() {
                             by="text"
                             as={"p"}
                             delay={0.5}
+                            className="text-zinc-400"
                         >
                             Where Access Meets Accountability
                         </TextAnimate>
@@ -44,9 +56,15 @@ export default function Home() {
                             <div className="flex gap-2 items-center">
                                 <Input
                                     placeholder="Got a ticket? Paste it here"
-                                    className="w-[300px]"
+                                    className="w-[300px] bg-stone-950/70"
+                                    value={ticketId}
+                                    onChange={(e) =>
+                                        setTicketId(e.target.value)
+                                    }
                                 />
-                                <Button>View Ticket</Button>
+                                <Button onClick={CheckTicket}>
+                                    View Ticket
+                                </Button>
                             </div>
                         </BlurFade>
                         <Link href={"/auth/login"}>
@@ -55,6 +73,7 @@ export default function Home() {
                                 by="text"
                                 as={"small"}
                                 delay={1.5}
+                                className="text-zinc-400"
                             >
                                 You don&apos;t have a ticket? Click here to
                                 login
