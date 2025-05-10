@@ -37,6 +37,7 @@ export default function Home() {
                             by="text"
                             as={"p"}
                             delay={0.5}
+                            className="text-zinc-400"
                         >
                             Where Access Meets Accountability
                         </TextAnimate>
@@ -44,7 +45,7 @@ export default function Home() {
                             <div className="flex gap-2 items-center">
                                 <Input
                                     placeholder="Got a ticket? Paste it here"
-                                    className="w-[300px]"
+                                    className="w-[300px] bg-stone-950/70"
                                 />
                                 <Button>View Ticket</Button>
                             </div>
@@ -55,6 +56,7 @@ export default function Home() {
                                 by="text"
                                 as={"small"}
                                 delay={1.5}
+                                className="text-zinc-400"
                             >
                                 You don&apos;t have a ticket? Click here to
                                 login

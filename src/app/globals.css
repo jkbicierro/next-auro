@@ -41,19 +41,21 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
-    --animate-ripple: ripple var(--duration,2s) ease calc(var(--i, 0)*.2s) infinite;
-  @keyframes ripple {
-  0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
+    --animate-ripple: ripple var(--duration, 2s) ease calc(var(--i, 0) * 0.2s)
+        infinite;
+    @keyframes ripple {
+        0%,
+        100% {
+            transform: translate(-50%, -50%) scale(1);
         }
-  50% {
-    transform: translate(-50%, -50%) scale(0.9);
+        50% {
+            transform: translate(-50%, -50%) scale(0.9);
         }
     }
 }
 
 :root {
-    --radius: 0.625rem;
+    --radius: 1rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.141 0.005 285.823);
     --card: oklch(1 0 0);
@@ -147,9 +149,9 @@ h4 {
 }
 
 p {
-    @apply text-base;
+    @apply text-base font-semibold;
 }
 
 small {
-    @apply text-xs;
+    @apply text-xs font-semibold;
 }
