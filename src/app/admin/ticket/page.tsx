@@ -60,7 +60,7 @@ export default function TicketScreen() {
         }
 
         GetSession();
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         async function GetTicketAll() {
@@ -139,13 +139,14 @@ export default function TicketScreen() {
                                     <TableRow>
                                         <TableCell>{i.id}</TableCell>
                                         <TableCell>{i.reference_id}</TableCell>
-                                        <TableCell className="flex items-center gap-3">
-                                            {i.title}
-                                        </TableCell>
+                                        <TableCell>{i.title}</TableCell>
                                         <TableCell>{i.type}</TableCell>
                                         <TableCell>
                                             {i.status === "Approved" && (
-                                                <Badge className="bg-green-200 text-green-600">
+                                                <Badge
+                                                    variant="outline"
+                                                    className="bg-green-200 text-green-600"
+                                                >
                                                     {i.status}
                                                 </Badge>
                                             )}
