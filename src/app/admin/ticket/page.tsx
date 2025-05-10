@@ -310,7 +310,7 @@ function HeroTicket() {
             toast.warning("The ticket ID must be a valid number");
             return;
         }
-        router.push(`/ticket/${ticketId}`);
+        router.push(`/admin/ticket/${ticketId}`);
     }
 
     return (
