@@ -13,12 +13,14 @@ export default function TicketScreen() {
         <>
             <main className="h-dvh flex flex-col items-center justify-center">
                 {/* typescript/javascript mapping object */}
-                <h1>Ticket</h1>
-                <p>Ticket ID</p>
-                <p>Ticket Details</p>
-                <p>Ticket Status</p>
-                <p>Ticket History</p>
-                <p>Ticket Comments</p>
+                <div className="border p-[50px] rounded">
+                    <h1>Ticket</h1>
+                    <p>Ticket ID</p>
+                    <p>i love yuou eric Details</p>
+                    <p>Ticket Status</p>
+                    <p>Ticket History</p>
+                    <p>Ticket Comments</p>
+                </div>
             </main>
         </>
     );
