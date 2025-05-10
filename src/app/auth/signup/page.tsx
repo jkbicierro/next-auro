@@ -21,6 +21,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import FooterSection from "@/components/block/footer";
+import Link from "next/link";
+import { Github } from "lucide-react";
 
 export default function SignupScreen() {
     const router = useRouter();
@@ -39,21 +41,36 @@ export default function SignupScreen() {
                     router.push("/admin/ticket");
                 }
             } catch (err) {
-                console.error("[GetSession] Error:", err);
-                toast.error("[GetSession] Failed to fetch. Please try again.");
+                console.error(err);
+                toast.error(
+                    "Server is currently unavailable. Please try again later."
+                );
             }
         }
 
         GetSession();
-    }, []);
+    }, [router]);
 
     return (
         <>
-            <main className="h-dvh flex items-center justify-center">
+            <nav className="z-50 fixed bg-background px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px] h-[60px] w-full flex items-center justify-between border-b">
+                <div>Auro</div>
+
+                <div>
+                    <Button size={"icon"} variant={"ghost"} asChild>
+                        <Link href="https://github.com/jkbicierro/next-auro">
+                            <Github />
+                        </Link>
+                    </Button>
+                </div>
+            </nav>
+            <main className="h-dvh flex items-center justify-around">
                 <div className="w-[350px]">
                     <div>
                         <h3>Sign up to Auro</h3>
-                        <p className="mt-2">Don't have an account? Create one here!</p>
+                        <p className="mt-2">
+                            Don&apos;t have an account? Create one here!
+                        </p>
                     </div>
                     <div className="mt-5 flex flex-col gap-4">
                         <Button variant={"outline"} className="rounded-full">
@@ -68,9 +85,19 @@ export default function SignupScreen() {
                     <div className="mt-5">
                         <SignupForm />
                     </div>
+                    <div className="mt-3 flex justify-center h-full">
+                        <Link href="/auth/login">
+                            <small>
+                                If you already have an account{" "}
+                                <span className="underline">Log in</span>
+                            </small>
+                        </Link>
+                    </div>
+                </div>
+                <div className="w-[350px] h-[600px] border">
+                    API Reference for Sign up
                 </div>
             </main>
-
             <FooterSection />
         </>
     );
@@ -128,7 +155,10 @@ function SignupForm() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="flex flex-col gap-4"
+            >
                 <FormField
                     control={form.control}
                     name="name"
@@ -136,7 +166,10 @@ function SignupForm() {
                         <FormItem>
                             <FormLabel>Name</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your name" {...field} />
+                                <Input
+                                    placeholder="Enter your name"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -149,7 +182,11 @@ function SignupForm() {
                         <FormItem>
                             <FormLabel>Email</FormLabel>
                             <FormControl>
-                                <Input placeholder="Enter your email" type="email" {...field} />
+                                <Input
+                                    placeholder="Enter your email"
+                                    type="email"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -162,7 +199,10 @@ function SignupForm() {
                         <FormItem>
                             <FormLabel>Password</FormLabel>
                             <FormControl>
-                                <PasswordInput placeholder="Enter your password" {...field} />
+                                <PasswordInput
+                                    placeholder="Enter your password"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -175,14 +215,17 @@ function SignupForm() {
                         <FormItem>
                             <FormLabel>Confirm Password</FormLabel>
                             <FormControl>
-                                <PasswordInput placeholder="Confirm your password" {...field} />
+                                <PasswordInput
+                                    placeholder="Confirm your password"
+                                    {...field}
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
                 <Button type="submit" className="w-full rounded-full mt-5">
-                    Sign Up
+                    Sign up with Email
                 </Button>
             </form>
         </Form>
