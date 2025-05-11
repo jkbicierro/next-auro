@@ -1,5 +1,5 @@
 export interface Approval_Ticket {
-    id: number;
+    id: string;
     reference_id: string;
     title: string;
     type: string;

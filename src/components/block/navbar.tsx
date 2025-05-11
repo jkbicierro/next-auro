@@ -1,10 +1,11 @@
+"use client";
+
 import {
     Code,
     Github,
     LogOut,
     User as UserIcon,
     HeartHandshake,
-    LogIn,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -170,7 +171,7 @@ export function NavBar() {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     ) : (
-                        <LogIn size={18} />
+                        <></>
                     )}
                 </div>
             </nav>

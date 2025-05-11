@@ -4,6 +4,7 @@ import { NavBar } from "@/components/block/navbar";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { Ripple } from "@/components/magicui/ripple";
 import { TextAnimate } from "@/components/magicui/text-animate";
+import { WordRotate } from "@/components/magicui/word-rotate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
@@ -18,9 +19,18 @@ export default function Home() {
             <main className="h-[85dvh] flex items-center justify-center relative overflow-hidden">
                 <div className="w-full h-full relative z-10">
                     <div className="h-full flex flex-col items-center justify-center text-center gap-5">
-                        <TextAnimate animation="scaleUp" by="text" as={"h1"}>
-                            Power Your Process with Auro
-                        </TextAnimate>
+                        <BlurFade delay={0.2}>
+                            <h1 className="flex gap-4 items-center">
+                                Power Your Process with
+                            </h1>
+
+                            <WordRotate
+                                className="text-4xl font-bold text-green"
+                                words={["Auro", `Fast`, "Simple", "Secure"]}
+                                duration={4500}
+                            />
+                        </BlurFade>
+
                         <TextAnimate
                             animation="scaleUp"
                             by="text"
@@ -30,11 +40,9 @@ export default function Home() {
                         >
                             Where Access Meets Accountability
                         </TextAnimate>
-
                         <BlurFade delay={1}>
                             <TicketInput />
                         </BlurFade>
-
                         <Link href={"/auth/login"}>
                             <TextAnimate
                                 animation="scaleUp"

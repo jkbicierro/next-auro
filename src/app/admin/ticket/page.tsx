@@ -205,7 +205,7 @@ export default function TicketScreen() {
 }
 
 type TicketActionProps = {
-    ticket_id: number;
+    ticket_id: string;
 };
 
 function TicketAction({ ticket_id }: TicketActionProps) {
