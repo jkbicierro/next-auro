@@ -45,56 +45,46 @@ export default function TicketScreen() {
 
     return (
         <>
-            <main className="h-dvh flex flex-col items-center justify-center">
+            <main className="min-h-dvh bg-black text-white flex flex-col items-center justify-center px-4">
+                <h2 className="text-xl font-semibold text-white mb-2">
+                    Ticket retrieved. Let Auro take it from here.
+                </h2>
+                <p className="text-sm text-zinc-400 mb-8">PUTA</p>
+
                 {ticket ? (
-                    <div className="border relative py-5 px-8 w-[450px]">
-                        {ticket.status === "Approved" && (
-                            <ShineBorder shineColor={["#1a9103"]} />
-                        )}
-                        {ticket.status === "For Approval" && (
-                            <ShineBorder shineColor={["#ffea05"]} />
-                        )}
-                        {ticket.status === "Declined" && (
-                            <ShineBorder shineColor={["#ff0800"]} />
-                        )}
+                    <div className="relative h-[280 px] w-[550px] rounded-2xl border p-7 shadow-xl">
+                        <div
+                            className={`absolute top-4 right-4 h-3 w-3 rounded-full ${
+                                ticket.status === "Approved"
+                                    ? "bg-green-500"
+                                    : ticket.status === "For Approval"
+                                    ? "bg-yellow-400"
+                                    : "bg-red-500"
+                            }`}
+                        />
 
-                        <div>
-                            <div className="flex gap-2">
-                                <h3 className="uppercase">{ticket.title}</h3>
-                                {ticket.status === "Approved" && (
-                                    <Badge
-                                        variant="outline"
-                                        className="bg-green-200 text-green-600"
-                                    >
-                                        {ticket.status}
-                                    </Badge>
-                                )}
-                                {ticket.status === "For Approval" && (
-                                    <Badge className="bg-yellow-200 text-yellow-600">
-                                        {ticket.status}
-                                    </Badge>
-                                )}
-                                {ticket.status === "Declined" && (
-                                    <Badge className="bg-red-200 text-red-600">
-                                        {ticket.status}
-                                    </Badge>
-                                )}
-                            </div>
+                        <span className="text-xs text-zinc-400 mb-3">
+                            This ticket is approved by the Admin
+                        </span>
 
-                            <p>{ticket.type}</p>
-
-                            <p>ID: {ticket.id}</p>
-                            <p>Reference: {ticket.reference_id}</p>
-
-                            <p>{ticket.department}</p>
+                        <h3 className="text-2xl mt-10 font-semibold mb-1">
+                            {ticket.title}
+                        </h3>
+                        <p className="text-sm pb-8 text-zinc-300 mb-4">
+                            {ticket.type}
+                        </p>
+                        <span className="text-sm  text-white font-medium mb-1">
+                            {ticket.department}
+                        </span>
+                        <div className="mt-10 text-[11px] text-zinc-500 flex justify-between">
+                            <span>{ticket.id}</span>
+                            <span>{ticket.reference_id}</span>
                         </div>
                     </div>
                 ) : (
-                    <>
-                        <Spinner>
-                            <p className="mt-2">Wait just a moment...</p>
-                        </Spinner>
-                    </>
+                    <Spinner>
+                        <p className="mt-2">Wait just a moment...</p>
+                    </Spinner>
                 )}
             </main>
         </>
