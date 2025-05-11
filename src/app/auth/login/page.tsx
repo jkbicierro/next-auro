@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import FooterSection from "@/components/block/footer";
 import Link from "next/link";
-import { Github } from "lucide-react";
+import { NavBar } from "@/components/block/navbar";
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -54,18 +54,8 @@ export default function LoginScreen() {
 
     return (
         <>
-            <nav className="z-50 fixed bg-background px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px] h-[60px] w-full flex items-center justify-between border-b">
-                <div>Auro</div>
-
-                <div>
-                    <Button size={"icon"} variant={"ghost"} asChild>
-                        <Link href="https://github.com/jkbicierro/next-auro">
-                            <Github />
-                        </Link>
-                    </Button>
-                </div>
-            </nav>
-            <main className="h-dvh flex items-center justify-around">
+            <NavBar />
+            <main className="h-[85dvh] flex items-center justify-around">
                 <div className="min-w-[350px]">
                     <div>
                         <h3>Log in to Auro</h3>

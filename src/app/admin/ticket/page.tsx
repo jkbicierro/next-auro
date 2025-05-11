@@ -11,7 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Approval_Ticket } from "@/models/ticket.model";
-import { CircleCheck, CircleX, Ellipsis } from "lucide-react";
+import { CircleCheck, CircleX, Ellipsis, Megaphone } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -19,7 +19,6 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-
 import {
     Dialog,
     DialogClose,
@@ -32,9 +31,10 @@ import {
 } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import FooterSection from "@/components/block/footer";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { NavBar } from "@/components/block/navbar";
 
 export default function TicketScreen() {
     const router = useRouter();
@@ -85,41 +85,45 @@ export default function TicketScreen() {
         GetTicketAll();
     }, []);
 
-    async function Logout() {
-        try {
-            const res = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/logout`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                }
-            );
-            const { message } = await res.json();
-
-            if (res.ok) {
-                router.push("/auth/login");
-                toast.success(message);
-            }
-        } catch (err) {
-            console.error("[Logout] Error:", err);
-            toast.error("[Logout] Failed to fetch. Please try again.");
-        }
-    }
-
     return (
         <>
-            <nav className="px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px] h-[60px] w-full flex items-center justify-between border-b">
-                <div>Auro</div>
-
-                <div>
-                    <Button onClick={Logout}>Sign out</Button>
-                </div>
-            </nav>
+            <NavBar />
 
             <main className="px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px]">
-                <HeroTicket />
+                <div className="mt-10 flex items-start gap-3">
+                    <Alert>
+                        <Megaphone />
+                        <AlertTitle>Animation + Revision 0.1.16a</AlertTitle>
+                        <AlertDescription>
+                            Added animation, revised navigation bar, API
+                            controls for external systems.
+                        </AlertDescription>
+                    </Alert>
+                    <Alert>
+                        <Megaphone />
+                        <AlertTitle>Register Form 0.1.13a</AlertTitle>
+                        <AlertDescription>
+                            Added sign up user interface to register new users.
+                        </AlertDescription>
+                    </Alert>
+                    <Alert>
+                        <Megaphone />
+                        <AlertTitle>Ticket 0.1.5a</AlertTitle>
+                        <AlertDescription>
+                            Added ticket screen, ticket action, and dynamic
+                            ticket route in a specific ID.
+                        </AlertDescription>
+                    </Alert>
+                </div>
 
-                <div>
+                <div className="mt-10">
+                    <div className="mb-10">
+                        <h2>Welcome back, John!</h2>
+                        <p className="mt-3 text-zinc-400">
+                            You have access to control the ticket
+                        </p>
+                    </div>
+
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -299,34 +303,5 @@ function TicketAction({ ticket_id }: TicketActionProps) {
                 </DialogContent>
             </Dialog>
         </ul>
-    );
-}
-
-function HeroTicket() {
-    const router = useRouter();
-    const [ticketId, setTicketId] = useState("");
-
-    async function CheckTicket() {
-        if (!ticketId || isNaN(Number(ticketId))) {
-            toast.warning("The ticket ID must be a valid number");
-            return;
-        }
-        router.push(`/ticket/${ticketId}`);
-    }
-
-    return (
-        <div className="h-[300px] flex flex-col items-center justify-center gap-5 text-center">
-            <h1>Power Your Process with Auro</h1>
-            <p>Where Access Meets Accountability</p>
-            <div className="flex gap-2 items-center">
-                <Input
-                    placeholder="Got a ticket? Paste it here"
-                    className="w-[300px]"
-                    value={ticketId}
-                    onChange={(e) => setTicketId(e.target.value)}
-                />
-                <Button onClick={CheckTicket}>View Ticket</Button>
-            </div>
-        </div>
     );
 }

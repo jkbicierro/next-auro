@@ -1,65 +1,21 @@
 "use client";
 
+import { NavBar } from "@/components/block/navbar";
 import { BlurFade } from "@/components/magicui/blur-fade";
 import { Ripple } from "@/components/magicui/ripple";
 import { TextAnimate } from "@/components/magicui/text-animate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { Github, Link2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-//import Image from "next/image";
-
 export default function Home() {
     return (
         <>
-            <nav className="z-50 fixed bg-background px-[20px] lg:px-[100px] xl:px-[150px] 2xl:px-[400px] h-[60px] w-full flex items-center justify-between border-b">
-                <div>Auro</div>
-
-                <div>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button size={"icon"} variant={"ghost"}>
-                                <Github />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] px-5 py-2">
-                            <div>
-                                <ul className="flex flex-col gap-2">
-                                    <Link
-                                        href={
-                                            "https://github.com/jkbicierro/express-auro"
-                                        }
-                                    >
-                                        <li className="hover:text-zinc-200 cursor-pointer flex items-center gap-2">
-                                            <Link2 size={14} />
-                                            express-auro
-                                        </li>
-                                    </Link>
-                                    <Link
-                                        href={
-                                            "https://github.com/jkbicierro/next-auro"
-                                        }
-                                    >
-                                        <li className="hover:text-zinc-200 cursor-pointer flex items-center gap-2">
-                                            <Link2 size={14} /> next-auro
-                                        </li>
-                                    </Link>
-                                </ul>
-                            </div>
-                        </PopoverContent>
-                    </Popover>
-                </div>
-            </nav>
-            <main className="h-screen flex items-center justify-center relative overflow-hidden">
+            <NavBar />
+            <main className="h-[85dvh] flex items-center justify-center relative overflow-hidden">
                 <div className="w-full h-full relative z-10">
                     <div className="h-full flex flex-col items-center justify-center text-center gap-5">
                         <TextAnimate animation="scaleUp" by="text" as={"h1"}>
