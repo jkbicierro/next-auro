@@ -94,7 +94,7 @@ export default function TicketScreen() {
             <div className="border p-10 rounded-2xl w-full max-w-md">
             <h1 className="text-xl font-semibold mb-4">Ticket Info</h1>
 
-            {loading && <p>Loading ticket...</p>}
+            {loading && <p>Loading ticket....</p>}
 
             {!loading && ticket && (
                 <div>
