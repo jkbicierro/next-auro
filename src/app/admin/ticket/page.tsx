@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Approval_Ticket } from "@/models/ticket.model";
 import { CircleCheck, CircleX, Ellipsis, Megaphone } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
     Popover,
@@ -62,28 +62,27 @@ export default function TicketScreen() {
         GetSession();
     }, [router]);
 
-    useEffect(() => {
-        async function GetTicketAll() {
-            try {
-                const res = await fetch(
-                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/ticket/showall`
-                );
+    const GetTicketAll = useCallback(async () => {
+        try {
+            const res = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/ticket/showall`
+            );
 
-                if (!res.ok) {
-                    throw new Error("Failed to fetch data");
-                }
-
-                const { tickets } = await res.json();
-                setTickets(tickets);
-            } catch (err) {
-                console.error("[GetTicketAll] Error:", err);
-                toast.error(
-                    "[GetTicketAll] Failed to fetch. Please try again."
-                );
+            if (!res.ok) {
+                throw new Error("Failed to fetch data");
             }
+
+            const { tickets } = await res.json();
+            setTickets(tickets);
+        } catch (err) {
+            console.error("[GetTicketAll] Error:", err);
+            toast.error("[GetTicketAll] Failed to fetch. Please try again.");
         }
-        GetTicketAll();
     }, []);
+
+    useEffect(() => {
+        GetTicketAll();
+    }, [GetTicketAll]);
 
     return (
         <>
@@ -187,6 +186,9 @@ export default function TicketScreen() {
                                                     <PopoverContent className="w-[250px]">
                                                         <TicketAction
                                                             ticket_id={i.id}
+                                                            refreshTickets={
+                                                                GetTicketAll
+                                                            }
                                                         />
                                                     </PopoverContent>
                                                 </Popover>
@@ -206,9 +208,10 @@ export default function TicketScreen() {
 
 type TicketActionProps = {
     ticket_id: string;
+    refreshTickets: () => void;
 };
 
-function TicketAction({ ticket_id }: TicketActionProps) {
+function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
     async function ApproveTicket() {
         try {
             const res = await fetch(
@@ -229,6 +232,7 @@ function TicketAction({ ticket_id }: TicketActionProps) {
 
             // Success + Add Toast Alert
             toast.success(message);
+            refreshTickets();
         } catch (err) {
             console.error("[fetch] ApproveTicket:", err);
             toast.error("Failed to fetch ApproveTicket. Please try again.");
@@ -254,6 +258,7 @@ function TicketAction({ ticket_id }: TicketActionProps) {
 
             const { message } = await res.json();
             toast.success(message);
+            refreshTickets();
         } catch (err) {
             console.error("[fetch] ApproveTicket:", err);
             toast.error("Failed to fetch ApproveTicket. Please try again.");
@@ -279,17 +284,21 @@ function TicketAction({ ticket_id }: TicketActionProps) {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            Do you want to decline this ticket?
+                            <h3>Do you want to decline this ticket?</h3>
                         </DialogTitle>
-                        <DialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your account and remove your data from our
-                            servers.
+                        <DialogDescription className="mt-2">
+                            <p>
+                                This action cannot be undone. This will
+                                permanently decline the ticket.
+                            </p>
                         </DialogDescription>
 
-                        <div>
-                            Remarks (Optional)
-                            <Textarea placeholder="Type your message here." />
+                        <div className="mt-2 mb-2">
+                            <small>Remarks (Optional)</small>
+                            <Textarea
+                                placeholder="Type your remarks here"
+                                className="mt-2"
+                            />
                         </div>
 
                         <DialogFooter>
