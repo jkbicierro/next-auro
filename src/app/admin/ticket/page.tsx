@@ -11,7 +11,14 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Approval_Ticket } from "@/models/ticket.model";
-import { CircleCheck, CircleX, Ellipsis, Megaphone } from "lucide-react";
+import {
+    CircleCheck,
+    CircleX,
+    Ellipsis,
+    ExternalLink,
+    Megaphone,
+    View,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
@@ -183,7 +190,7 @@ export default function TicketScreen() {
                                                             />
                                                         </Button>
                                                     </PopoverTrigger>
-                                                    <PopoverContent className="w-[250px]">
+                                                    <PopoverContent className="px-1 py-1 m-0 w-[250px]">
                                                         <TicketAction
                                                             ticket_id={i.id}
                                                             refreshTickets={
@@ -212,6 +219,8 @@ type TicketActionProps = {
 };
 
 function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
+    const [remarks, setRemarks] = useState("");
+
     async function ApproveTicket() {
         try {
             const res = await fetch(
@@ -248,7 +257,10 @@ function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ ticket_id: ticket_id }),
+                    body: JSON.stringify({
+                        ticket_id: ticket_id,
+                        remarks: remarks,
+                    }),
                 }
             );
 
@@ -267,6 +279,10 @@ function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
 
     return (
         <ul className="flex flex-col gap-1">
+            <li className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded cursor-pointer">
+                <span className="text-sm">View Ticket</span>
+                <ExternalLink size={16} />
+            </li>
             <li
                 onClick={ApproveTicket}
                 className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded cursor-pointer"
@@ -284,13 +300,11 @@ function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>
-                            <h3>Do you want to decline this ticket?</h3>
+                            Do you want to decline this ticket?
                         </DialogTitle>
                         <DialogDescription className="mt-2">
-                            <p>
-                                This action cannot be undone. This will
-                                permanently decline the ticket.
-                            </p>
+                            This action cannot be undone. This will permanently
+                            decline the ticket.
                         </DialogDescription>
 
                         <div className="mt-2 mb-2">
@@ -298,6 +312,8 @@ function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
                             <Textarea
                                 placeholder="Type your remarks here"
                                 className="mt-2"
+                                value={remarks}
+                                onChange={(e) => setRemarks(e.target.value)}
                             />
                         </div>
 
