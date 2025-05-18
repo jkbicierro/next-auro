@@ -84,9 +84,9 @@ export default function SignupScreen() {
                         </Link>
                     </div>
                 </div>
-                <div className="w-[350px] h-[600px] border">
+                {/* <div className="w-[350px] h-[600px] border">
                     API Reference for Sign up
-                </div>
+                </div> */}
             </main>
             <FooterSection />
         </>

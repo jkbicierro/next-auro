@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { ShineBorder } from "@/components/magicui/shine-border";
 import { Spinner } from "@/components/ui/spinner";
 import { Approval_Ticket } from "@/models/ticket.model";
-import { Ticket } from "lucide-react";
+import { StickyNote, Ticket } from "lucide-react";
 
 export default function TicketScreen() {
     const [ticket, setTicket] = useState<Approval_Ticket | null>(null);
@@ -61,27 +61,36 @@ export default function TicketScreen() {
 
             {ticket === null && !isLoading && (
                 <div className="flex flex-col items-center">
-                    <h1 className="mb-2">Ticket Not Found</h1>
-                    <p className="text-zinc-500">The ticket you are looking for could not be retrieved.</p>
+                    <h2 className="mb-2">Ticket Not Found</h2>
+                    <p className="text-zinc-500">
+                        The ticket you are looking for could not be retrieved.
+                    </p>
                 </div>
             )}
 
             {ticket !== null && (
                 <>
-                    <h1 className="mb-2">Ticket has been retrieved!</h1>
-                    <p className="text-zinc-500 mb-6">Let Auro take it from here.</p>
+                    <h2 className="mb-2">Ticket has been retrieved!</h2>
+                    <p className="text-zinc-500 mb-6">
+                        Let Auro take it from here.
+                    </p>
 
                     <div className="relative h-[280px] w-[550px] rounded-2xl border p-7 shadow-xl">
                         {ticket.status === "Approved" && (
-                            <ShineBorder shineColor={["#45e670", "#00ff99", "#62ff00"]} />
+                            <ShineBorder
+                                shineColor={["#45e670", "#00ff99", "#62ff00"]}
+                            />
                         )}
                         {ticket.status === "For Approval" && (
-                            <ShineBorder shineColor={["#fff70d", "#ffb405", "#e5ff00"]} />
+                            <ShineBorder
+                                shineColor={["#fff70d", "#ffb405", "#e5ff00"]}
+                            />
                         )}
                         {ticket.status === "Declined" && (
-                            <ShineBorder shineColor={["#ff0000", "#ff2a00", "#ff004c"]} />
+                            <ShineBorder
+                                shineColor={["#ff0000", "#ff2a00", "#ff004c"]}
+                            />
                         )}
-
                         <div className="flex justify-between items-center">
                             <span className="text-xs text-zinc-400 flex gap-2 items-center uppercase">
                                 <Ticket size={14} />
@@ -89,26 +98,30 @@ export default function TicketScreen() {
                             </span>
                             <div className="flex items-center justify-center">
                                 <div
-                                    className={`absolute animate-ping flex items-center justify-center h-3 w-3 rounded-full ${ticket.status === "Approved"
-                                        ? "bg-green-500"
-                                        : ticket.status === "For Approval"
+                                    className={`absolute animate-ping flex items-center justify-center h-3 w-3 rounded-full ${
+                                        ticket.status === "Approved"
+                                            ? "bg-green-500"
+                                            : ticket.status === "For Approval"
                                             ? "bg-yellow-400"
-                                            : "bg-red-500"}`}
+                                            : "bg-red-500"
+                                    }`}
                                 ></div>
                                 <div
-                                    className={`absolute h-3 w-3 rounded-full ${ticket.status === "Approved"
-                                        ? "bg-green-500"
-                                        : ticket.status === "For Approval"
+                                    className={`absolute h-3 w-3 rounded-full ${
+                                        ticket.status === "Approved"
+                                            ? "bg-green-500"
+                                            : ticket.status === "For Approval"
                                             ? "bg-yellow-400"
-                                            : "bg-red-500"}`}
+                                            : "bg-red-500"
+                                    }`}
                                 ></div>
                             </div>
                         </div>
-
                         <h3 className="mt-10 mb-1">{ticket.title}</h3>
                         <p className="text-sm pb-8 text-zinc-200 mb-4">
                             {ticket.type}
                         </p>
+
                         <span className="text-sm text-zinc-400 font-medium mb-1">
                             {ticket.department}
                         </span>
@@ -117,6 +130,19 @@ export default function TicketScreen() {
                             <span>ticket_{ticket.id}</span>
                             <span>reference_{ticket.reference_id}</span>
                         </div>
+                    </div>
+                    <div className="mt-5">
+                        {ticket.remarks ? (
+                            <p className="flex items-center gap-2">
+                                <StickyNote size={14} />
+                                {ticket.remarks}
+                            </p>
+                        ) : (
+                            <p className="flex items-center gap-2">
+                                <StickyNote size={14} />
+                                There has no remarks at the moment
+                            </p>
+                        )}
                     </div>
                 </>
             )}

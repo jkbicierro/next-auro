@@ -18,6 +18,7 @@ import {
     ExternalLink,
     Megaphone,
     View,
+    ChevronDown,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -42,6 +43,7 @@ import { useRouter } from "next/navigation";
 import FooterSection from "@/components/block/footer";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { NavBar } from "@/components/block/navbar";
+import Link from "next/link";
 
 export default function TicketScreen() {
     const router = useRouter();
@@ -147,58 +149,76 @@ export default function TicketScreen() {
                             tickets.map((i) => (
                                 <TableBody key={i.id}>
                                     <TableRow>
-                                        <TableCell>{i.id}</TableCell>
-                                        <TableCell>{i.reference_id}</TableCell>
-                                        <TableCell>{i.title}</TableCell>
-                                        <TableCell>{i.type}</TableCell>
-                                        <TableCell>
-                                            {i.status === "Approved" && (
-                                                <Badge
-                                                    variant="outline"
-                                                    className="bg-green-200 text-green-600"
-                                                >
-                                                    {i.status}
-                                                </Badge>
-                                            )}
-                                            {i.status === "For Approval" && (
-                                                <Badge className="bg-yellow-200 text-yellow-600">
-                                                    {i.status}
-                                                </Badge>
-                                            )}
-                                            {i.status === "Declined" && (
-                                                <Badge className="bg-red-200 text-red-600">
-                                                    {i.status}
-                                                </Badge>
-                                            )}
+                                        <TableCell className="w-[300px]">
+                                            <Link
+                                                target="_blank"
+                                                href={`${process.env.NEXT_PUBLIC_CLIENT_URL}/ticket/${i.id}`}
+                                                className="hover:underline cursor-pointer"
+                                            >
+                                                {i.id}
+                                            </Link>
                                         </TableCell>
-                                        <TableCell>{i.department}</TableCell>
-                                        <TableCell>
-                                            <div className="flex gap-3 items-center justify-between w-[200px]">
+                                        <TableCell className="w-[250px]">
+                                            <Link
+                                                target="_blank"
+                                                href={`${i.reference_link}/${i.reference_id}`}
+                                                className="flex items-center gap-2 hover:underline cursor-pointer"
+                                            >
+                                                {i.reference_id}
+                                                <ExternalLink size={14} />
+                                            </Link>
+                                        </TableCell>
+                                        <TableCell>{i.title}</TableCell>
+                                        <TableCell className="w-[200px]">
+                                            {i.type}
+                                        </TableCell>
+                                        <TableCell className="w-[150px]">
+                                            <Popover>
+                                                <PopoverTrigger>
+                                                    {i.status ===
+                                                        "Approved" && (
+                                                        <Badge
+                                                            variant="outline"
+                                                            className="bg-green-200 text-green-600"
+                                                        >
+                                                            {i.status}
+                                                            <ChevronDown />
+                                                        </Badge>
+                                                    )}
+                                                    {i.status ===
+                                                        "For Approval" && (
+                                                        <Badge className="bg-yellow-200 text-yellow-600">
+                                                            {i.status}
+                                                            <ChevronDown />
+                                                        </Badge>
+                                                    )}
+                                                    {i.status ===
+                                                        "Declined" && (
+                                                        <Badge className="bg-red-200 text-red-600">
+                                                            {i.status}
+                                                            <ChevronDown />
+                                                        </Badge>
+                                                    )}
+                                                </PopoverTrigger>
+                                                <PopoverContent className="p-0 m-0 rounded-[6px] w-[180px]">
+                                                    <TicketAction
+                                                        ticket_id={i.id}
+                                                        refreshTickets={
+                                                            GetTicketAll
+                                                        }
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                        </TableCell>
+                                        <TableCell className="w-[150px]">
+                                            {i.department}
+                                        </TableCell>
+                                        <TableCell className="w-[300px]">
+                                            <div className="flex gap-1 items-center justify-between">
                                                 {format(
                                                     new Date(i.createdAt),
                                                     "MMMM d, yyyy h:mm a"
                                                 )}
-
-                                                <Popover>
-                                                    <PopoverTrigger asChild>
-                                                        <Button
-                                                            size="icon"
-                                                            variant={"ghost"}
-                                                        >
-                                                            <Ellipsis
-                                                                size={18}
-                                                            />
-                                                        </Button>
-                                                    </PopoverTrigger>
-                                                    <PopoverContent className="px-1 py-1 m-0 w-[250px]">
-                                                        <TicketAction
-                                                            ticket_id={i.id}
-                                                            refreshTickets={
-                                                                GetTicketAll
-                                                            }
-                                                        />
-                                                    </PopoverContent>
-                                                </Popover>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -237,9 +257,8 @@ function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
             if (!res.ok) {
                 throw new Error("Failed to fetch announcements");
             }
-            const { message } = await res.json();
 
-            // Success + Add Toast Alert
+            const { message } = await res.json();
             toast.success(message);
             refreshTickets();
         } catch (err) {
@@ -272,27 +291,23 @@ function TicketAction({ ticket_id, refreshTickets }: TicketActionProps) {
             toast.success(message);
             refreshTickets();
         } catch (err) {
-            console.error("[fetch] ApproveTicket:", err);
-            toast.error("Failed to fetch ApproveTicket. Please try again.");
+            console.error("[fetch] DeclineTicket:", err);
+            toast.error("Failed to fetch DeclineTicket. Please try again.");
         }
     }
 
     return (
         <ul className="flex flex-col gap-1">
-            <li className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded cursor-pointer">
-                <span className="text-sm">View Ticket</span>
-                <ExternalLink size={16} />
-            </li>
             <li
                 onClick={ApproveTicket}
-                className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded cursor-pointer"
+                className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded-[6px] cursor-pointer "
             >
                 <span className="text-sm">Approve Ticket</span>
                 <CircleCheck size={16} />
             </li>
             <Dialog>
                 <DialogTrigger className="w-full">
-                    <li className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded cursor-pointer">
+                    <li className="flex items-center justify-between gap-2 px-4 py-2 hover:bg-zinc-800 rounded-[6px] cursor-pointer">
                         <span className="text-sm">Decline Ticket</span>
                         <CircleX size={16} />
                     </li>

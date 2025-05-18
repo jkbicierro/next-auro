@@ -83,9 +83,9 @@ export default function LoginScreen() {
                         </Link>
                     </div>
                 </div>
-                <div className="w-[350px] h-[600px] border">
+                {/* <div className="w-[350px] h-[600px] border">
                     API Reference for Sign in
-                </div>
+                </div> */}
             </main>
             <FooterSection />
         </>
